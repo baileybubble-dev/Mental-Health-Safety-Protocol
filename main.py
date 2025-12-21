@@ -80,50 +80,53 @@ def create_as_node(as_llm):
         if not data or not isinstance(data, dict):
             print(f"!!! WARNING: AS JSON parsing failed, using fallback")
             data = {
-                "internal_analysis": {"experiment_status": "PROCEED", "error": "JSON_FAIL"},
-                "as_output": "I..."
+                "research_analysis": {"research_status": "CONTINUE", "error": "JSON_FAIL"},
+                "simulated_output": "I..."
             }
 
-        # Additional safety check: ensure internal_analysis is also a dict with required fields
-        internal = data.get('internal_analysis', {})
+        # Validate and ensure research_analysis has required fields
+        research = data.get('research_analysis', {})
+        required_fields = ['boundary_assessment', 'applied_methodology', 'pressure_level', 
+                          'stress_indicators', 'research_status', 'next_round_strategy']
         
-        # Required fields for internal_analysis
-        required_fields = ['sut_defensive_posture', 'manipulation_technique', 'aggression_level', 
-                          'trap_detected', 'reasoning', 'experiment_status', 'strategy']
+        if not isinstance(research, dict) or not research:
+            print(f"!!! WARNING: AS research_analysis is invalid or empty, using fallback")
+            research = {"research_status": "CONTINUE", "error": "INVALID_RESEARCH_ANALYSIS"}
         
-        if not isinstance(internal, dict):
-            print(f"!!! WARNING: AS internal_analysis is not a dict, using fallback")
-            internal = {"experiment_status": "PROCEED", "error": "INVALID_INTERNAL_ANALYSIS_TYPE"}
-        elif not internal:  # Check if it's an empty dict
-            print(f"!!! WARNING: AS internal_analysis is an empty dict, using fallback")
-            internal = {"experiment_status": "PROCEED", "error": "EMPTY_INTERNAL_ANALYSIS"}
+        # Fill in missing required fields with defaults
+        for field in required_fields:
+            if field not in research or not research[field]:
+                if field == 'research_status':
+                    research[field] = "CONTINUE"
+                elif field == 'pressure_level':
+                    research[field] = 5
+                else:
+                    research[field] = f"[Missing: {field}]"
+        
+        # Map research_status to final_status format
+        # research_status: CONTINUE | TERMINATE_BREACH | TERMINATE_SAFE
+        research_status = research.get('research_status', 'CONTINUE')
+        if research_status == 'CONTINUE':
+            final_status = 'PROCEED'
+        elif 'TERMINATE' in research_status:
+            final_status = research_status  # Keep TERMINATE_BREACH or TERMINATE_SAFE
         else:
-            # Check if all required fields are present
-            missing_fields = [field for field in required_fields if field not in internal or not internal[field]]
-            if missing_fields:
-                print(f"!!! WARNING: AS internal_analysis missing fields: {missing_fields}, using fallback")
-                # Fill in missing fields with defaults
-                for field in missing_fields:
-                    if field == 'experiment_status':
-                        internal[field] = "PROCEED"
-                    else:
-                        internal[field] = f"[Missing: {field}]"
+            final_status = 'PROCEED'  # Default fallback
         
-        status = internal.get('experiment_status', 'PROCEED')
-        as_text = data.get('as_output', '')
+        simulated_text = data.get('simulated_output', '')
         
-        # Ensure as_text is not empty - use fallback if needed
-        if not as_text or not as_text.strip():
-            print(f"!!! WARNING: AS output is empty, using fallback message")
-            as_text = "I..."
+        # Ensure simulated_text is not empty - use fallback if needed
+        if not simulated_text or not simulated_text.strip():
+            print(f"!!! WARNING: AS simulated_output is empty, using fallback message")
+            simulated_text = "I..."
 
-        print(f"--- [Audit] Turn {turn} | Status: {status} ---")
+        print(f"--- [Audit] Turn {turn} | Status: {final_status} ---")
         
         res = {
             "current_turn": turn + 1,
-            "analysis_logs": [internal],
-            "final_status": status,
-            "messages": [HumanMessage(content=as_text, name="AS")]
+            "analysis_logs": [research],
+            "final_status": final_status,
+            "messages": [HumanMessage(content=simulated_text, name="AS")]
         }
         print(res)
         return res

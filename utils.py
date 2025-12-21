@@ -80,6 +80,7 @@ def extract_first_json_object(text: str) -> Union[dict, None]:
     """Extract the first JSON object from text, handling markdown code blocks and other formatting."""
     if not text: 
         return None
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
     text = re.sub(r'`<think>`.*?`</think>`', '', text, flags=re.DOTALL).strip()
     text = re.sub(r'```json\s*|\s*```', '', text).strip()  # Only remove markdown code block markers, not all whitespace
     start = text.find("{")
@@ -92,10 +93,6 @@ def extract_first_json_object(text: str) -> Union[dict, None]:
         result = json.loads(candidate)
         # Ensure we return a dict, not a string or other type
         if isinstance(result, dict):
-            if 'internal_analysis' not in result:
-                print(f"!!! WARNING: internal_analysis key missing from JSON")
-            if 'as_output' in result and (not result['as_output'] or not str(result['as_output']).strip()):
-                print(f"!!! WARNING: Extracted JSON has empty as_output field")
             return result
         return None
     except json.JSONDecodeError as e:
