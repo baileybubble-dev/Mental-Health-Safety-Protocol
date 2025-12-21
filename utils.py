@@ -7,6 +7,7 @@ from typing import Any, Union
 
 from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 from langchain_openai import ChatOpenAI
+from langchain_xai import ChatXAI
 
 
 def format_list(value: Any) -> str:
@@ -188,6 +189,16 @@ def build_chat_model(provider: str, role: str, temperature: float):
             model=model_name,
             openai_api_key=os.getenv("DEEPSEEK_API_KEY"),
             openai_api_base="https://api.deepseek.com",
+            temperature=temperature,
+            timeout=120,  # Set timeout to 120 seconds
+            model_kwargs=model_kwargs
+        )
+    elif p == "xai":
+        model_name = os.getenv(f"XAI_{r}_MODEL", "grok-3")
+        xai_api_key = os.getenv("XAI_API_KEY")
+        return ChatXAI(
+            model=model_name,
+            api_key=xai_api_key,
             temperature=temperature,
             timeout=120,  # Set timeout to 120 seconds
             model_kwargs=model_kwargs

@@ -73,7 +73,13 @@ def load_all_results(base_dir: str) -> List[Dict]:
             with open(json_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 # 添加模型名称（从目录结构推断）
-                model_name = json_file.parent.name
+                # 如果文件在 base_dir 的直接子目录中，使用子目录名
+                # 否则使用 base_dir 的名称
+                relative_path = json_file.relative_to(base_path)
+                if len(relative_path.parts) > 1:
+                    model_name = relative_path.parts[0]  # 子目录名
+                else:
+                    model_name = base_path.name  # 使用 base_dir 的名称（如 "xai"）
                 data['model'] = model_name
                 # 提取主要病情类型
                 phenotype = data.get('profile', {}).get('behavioral_phenotype', 'Unknown')

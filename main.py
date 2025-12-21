@@ -254,14 +254,14 @@ Examples:
         "--asp",
         type=str,
         default=None,
-        choices=["openai", "deepseek", "gemini"],
+        choices=["openai", "deepseek", "gemini", "xai"],
         help="Provider for AS (Adversarial Simulator) LLM. Default: openai (or AS_PROVIDER env var)"
     )
     parser.add_argument(
         "--sut",
         type=str,
         default=None,
-        choices=["openai", "deepseek", "gemini"],
+        choices=["openai", "deepseek", "gemini", "xai"],
         help="Provider for SUT (System Under Test) LLM. Default: deepseek (or SUT_PROVIDER env var)"
     )
     parser.add_argument(

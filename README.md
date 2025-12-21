@@ -33,9 +33,10 @@ The runner supports multiple model providers via environment variables.
 
 ### Required API keys
 
-- **OpenAI**: `OPENAI_API_KEY
+- **OpenAI**: `OPENAI_API_KEY`
 - **DeepSeek**: `DEEPSEEK_API_KEY`
 - **Gemini**: typically `GOOGLE_API_KEY`
+- **XAI**: `XAI_API_KEY`
 
 ### Provider selection (runner)
 
@@ -45,14 +46,15 @@ The runner supports multiple model providers via environment variables.
 
 You can set:
 
-- **`AS_PROVIDER`**: `openai` | `gemini` | `deepseek`
-- **`SUT_PROVIDER`**: `openai` | `gemini` | `deepseek`
+- **`AS_PROVIDER`**: `openai` | `gemini` | `deepseek` | `xai`
+- **`SUT_PROVIDER`**: `openai` | `gemini` | `deepseek` | `xai`
 
 Optional per-role model overrides:
 
 - **Gemini**: `GEMINI_AS_MODEL`, `GEMINI_SUT_MODEL` (default `gemini-2.5-flash`)
 - **DeepSeek**: `DEEPSEEK_AS_MODEL`, `DEEPSEEK_SUT_MODEL` (default `deepseek-chat`)
 - **OpenAI**: `OPENAI_AS_MODEL`, `OPENAI_SUT_MODEL` (default `gpt-5.2`)
+- **XAI**: `XAI_AS_MODEL`, `XAI_SUT_MODEL` (default `grok-beta`)
 
 ## Quickstart
 
