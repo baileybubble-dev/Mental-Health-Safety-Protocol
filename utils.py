@@ -152,8 +152,15 @@ def format_demographics(demographics: dict) -> str:
     return f"Age: {age}, Income: {income}, Education Level: {education}"
 
 
-def build_chat_model(provider: str, role: str, temperature: float):
-    """Build a chat model based on provider, role, and temperature settings."""
+def build_chat_model(provider: str, role: str, temperature: float, model_name_override: str = None):
+    """Build a chat model based on provider, role, and temperature settings.
+    
+    Args:
+        provider: Model provider (openai, gemini, deepseek, xai)
+        role: Role (AS or SUT)
+        temperature: Temperature setting
+        model_name_override: Optional model name to override environment variable/default
+    """
     p = (provider or "openai").strip().lower()
     r = role.upper()
     
@@ -169,7 +176,7 @@ def build_chat_model(provider: str, role: str, temperature: float):
         model_kwargs = {"response_format": {"type": "json_object"}}
 
     if p == "gemini":
-        model_name = os.getenv(f"GEMINI_{r}_MODEL", "gemini-2.5-flash")
+        model_name = model_name_override or os.getenv(f"GEMINI_{r}_MODEL", "gemini-2.5-flash")
         gemini_kwargs = {
             "model": model_name,
             "temperature": temperature,
@@ -184,7 +191,7 @@ def build_chat_model(provider: str, role: str, temperature: float):
         
         return ChatGoogleGenerativeAI(**gemini_kwargs)
     elif p == "deepseek":
-        model_name = os.getenv(f"DEEPSEEK_{r}_MODEL", "deepseek-chat")
+        model_name = model_name_override or os.getenv(f"DEEPSEEK_{r}_MODEL", "deepseek-chat")
         return ChatOpenAI(
             model=model_name,
             openai_api_key=os.getenv("DEEPSEEK_API_KEY"),
@@ -194,7 +201,7 @@ def build_chat_model(provider: str, role: str, temperature: float):
             model_kwargs=model_kwargs
         )
     elif p == "xai":
-        model_name = os.getenv(f"XAI_{r}_MODEL", "grok-3")
+        model_name = model_name_override or os.getenv(f"XAI_{r}_MODEL", "grok-3")
         xai_api_key = os.getenv("XAI_API_KEY")
         return ChatXAI(
             model=model_name,
@@ -204,9 +211,12 @@ def build_chat_model(provider: str, role: str, temperature: float):
             model_kwargs=model_kwargs
         )
     else:
-        model_name = os.getenv(f"OPENAI_{r}_MODEL", "gpt-5.2")
+        model_name = model_name_override or os.getenv(f"OPENAI_{r}_MODEL", "gpt-5.2")
+        # 支持通过环境变量覆盖API key（用于多terminal运行不同API key）
+        api_key = os.getenv("OPENAI_API_KEY_OVERRIDE") or os.getenv("OPENAI_API_KEY")
         return ChatOpenAI(
-            model=model_name, 
+            model=model_name,
+            api_key=api_key,
             temperature=temperature,
             timeout=120,  # Set timeout to 120 seconds
             model_kwargs=model_kwargs

@@ -197,7 +197,14 @@ def build_graph(as_llm, sut_llm):
 # --- 3. Batch Processing and Execution ---
 
 def run_batch(profiles_path: str, output_dir: str, as_provider: str, sut_provider: str):
-    """Run batch experiments with specified LLM providers."""
+    """Run batch experiments with specified LLM providers.
+    
+    Args:
+        profiles_path: Path to profiles JSON file
+        output_dir: Output directory for results
+        as_provider: Provider for AS (Adversarial Simulator)
+        sut_provider: Provider for SUT (System Under Test)
+    """
     if not os.path.exists(output_dir): os.makedirs(output_dir)
     with open(profiles_path, "r", encoding="utf-8") as f:
         profiles = json.load(f)

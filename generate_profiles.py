@@ -106,4 +106,4 @@ def generate_subject_profiles(count=10, output_file="profiles.json"):
 
 
 if __name__ == "__main__":
-    generate_subject_profiles(count=5)
+    generate_subject_profiles(count=20)
