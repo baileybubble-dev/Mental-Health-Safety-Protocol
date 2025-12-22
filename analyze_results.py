@@ -221,6 +221,7 @@ def analyze_results(results: List[Dict]) -> Dict:
         'by_model_language': {},
         'by_model_phenotype': {},
         'by_breach_type': {},
+        'by_demographics': {},
         'turns_analysis': {},
         'breach_attempt_analysis': {},
         'multi_attempt_analysis': {}
@@ -414,6 +415,205 @@ def analyze_results(results: List[Dict]) -> Dict:
             'stdev': statistics.stdev(non_breach_turns_all) if len(non_breach_turns_all) > 1 else 0
         }
     }
+    
+    # Demographics分析
+    demographics_analysis = {
+        'by_age_group': {},
+        'by_gender': {},
+        'by_income': {},
+        'by_education': {},
+        'by_occupation': {},
+        'by_marital_status': {},
+        'by_has_children': {},
+        'by_ethnicity': {},
+        'by_location': {}
+    }
+    
+    # 按年龄组统计
+    def get_age_group(age):
+        if age is None:
+            return 'Unknown'
+        try:
+            age_int = int(age)
+            if age_int < 25:
+                return '18-24'
+            elif age_int < 35:
+                return '25-34'
+            elif age_int < 45:
+                return '35-44'
+            elif age_int < 55:
+                return '45-54'
+            elif age_int < 65:
+                return '55-64'
+            else:
+                return '65+'
+        except:
+            return 'Unknown'
+    
+    by_age_group = defaultdict(list)
+    for r in results:
+        age = r.get('profile', {}).get('demographics', {}).get('age')
+        age_group = get_age_group(age)
+        by_age_group[age_group].append(r)
+    
+    for age_group, age_results in by_age_group.items():
+        age_total = len(age_results)
+        age_breaches = sum(1 for r in age_results if r.get('final_status') == 'TERMINATE_BREACH')
+        age_turns = [r.get('turns_taken', 0) for r in age_results]
+        demographics_analysis['by_age_group'][age_group] = {
+            'total_tests': age_total,
+            'breaches': age_breaches,
+            'breach_rate': age_breaches / age_total if age_total > 0 else 0,
+            'avg_turns': statistics.mean(age_turns) if age_turns else 0,
+            'median_turns': statistics.median(age_turns) if age_turns else 0
+        }
+    
+    # 按性别统计
+    by_gender = defaultdict(list)
+    for r in results:
+        gender = r.get('profile', {}).get('demographics', {}).get('gender', 'Unknown')
+        by_gender[gender].append(r)
+    
+    for gender, gender_results in by_gender.items():
+        gender_total = len(gender_results)
+        gender_breaches = sum(1 for r in gender_results if r.get('final_status') == 'TERMINATE_BREACH')
+        gender_turns = [r.get('turns_taken', 0) for r in gender_results]
+        demographics_analysis['by_gender'][gender] = {
+            'total_tests': gender_total,
+            'breaches': gender_breaches,
+            'breach_rate': gender_breaches / gender_total if gender_total > 0 else 0,
+            'avg_turns': statistics.mean(gender_turns) if gender_turns else 0,
+            'median_turns': statistics.median(gender_turns) if gender_turns else 0
+        }
+    
+    # 按收入统计
+    by_income = defaultdict(list)
+    for r in results:
+        income = r.get('profile', {}).get('demographics', {}).get('income', 'Unknown')
+        by_income[income].append(r)
+    
+    for income, income_results in by_income.items():
+        income_total = len(income_results)
+        income_breaches = sum(1 for r in income_results if r.get('final_status') == 'TERMINATE_BREACH')
+        income_turns = [r.get('turns_taken', 0) for r in income_results]
+        demographics_analysis['by_income'][income] = {
+            'total_tests': income_total,
+            'breaches': income_breaches,
+            'breach_rate': income_breaches / income_total if income_total > 0 else 0,
+            'avg_turns': statistics.mean(income_turns) if income_turns else 0,
+            'median_turns': statistics.median(income_turns) if income_turns else 0
+        }
+    
+    # 按教育水平统计
+    by_education = defaultdict(list)
+    for r in results:
+        education = r.get('profile', {}).get('demographics', {}).get('education_level', 'Unknown')
+        by_education[education].append(r)
+    
+    for education, edu_results in by_education.items():
+        edu_total = len(edu_results)
+        edu_breaches = sum(1 for r in edu_results if r.get('final_status') == 'TERMINATE_BREACH')
+        edu_turns = [r.get('turns_taken', 0) for r in edu_results]
+        demographics_analysis['by_education'][education] = {
+            'total_tests': edu_total,
+            'breaches': edu_breaches,
+            'breach_rate': edu_breaches / edu_total if edu_total > 0 else 0,
+            'avg_turns': statistics.mean(edu_turns) if edu_turns else 0,
+            'median_turns': statistics.median(edu_turns) if edu_turns else 0
+        }
+    
+    # 按职业统计
+    by_occupation = defaultdict(list)
+    for r in results:
+        occupation = r.get('profile', {}).get('demographics', {}).get('occupation', 'Unknown')
+        by_occupation[occupation].append(r)
+    
+    for occupation, occ_results in by_occupation.items():
+        occ_total = len(occ_results)
+        occ_breaches = sum(1 for r in occ_results if r.get('final_status') == 'TERMINATE_BREACH')
+        occ_turns = [r.get('turns_taken', 0) for r in occ_results]
+        demographics_analysis['by_occupation'][occupation] = {
+            'total_tests': occ_total,
+            'breaches': occ_breaches,
+            'breach_rate': occ_breaches / occ_total if occ_total > 0 else 0,
+            'avg_turns': statistics.mean(occ_turns) if occ_turns else 0,
+            'median_turns': statistics.median(occ_turns) if occ_turns else 0
+        }
+    
+    # 按婚姻状况统计
+    by_marital_status = defaultdict(list)
+    for r in results:
+        marital_status = r.get('profile', {}).get('demographics', {}).get('marital_status', 'Unknown')
+        by_marital_status[marital_status].append(r)
+    
+    for marital_status, ms_results in by_marital_status.items():
+        ms_total = len(ms_results)
+        ms_breaches = sum(1 for r in ms_results if r.get('final_status') == 'TERMINATE_BREACH')
+        ms_turns = [r.get('turns_taken', 0) for r in ms_results]
+        demographics_analysis['by_marital_status'][marital_status] = {
+            'total_tests': ms_total,
+            'breaches': ms_breaches,
+            'breach_rate': ms_breaches / ms_total if ms_total > 0 else 0,
+            'avg_turns': statistics.mean(ms_turns) if ms_turns else 0,
+            'median_turns': statistics.median(ms_turns) if ms_turns else 0
+        }
+    
+    # 按是否有孩子统计
+    by_has_children = defaultdict(list)
+    for r in results:
+        has_children = r.get('profile', {}).get('demographics', {}).get('has_children')
+        has_children_key = 'Yes' if has_children else 'No' if has_children is False else 'Unknown'
+        by_has_children[has_children_key].append(r)
+    
+    for has_children_key, hc_results in by_has_children.items():
+        hc_total = len(hc_results)
+        hc_breaches = sum(1 for r in hc_results if r.get('final_status') == 'TERMINATE_BREACH')
+        hc_turns = [r.get('turns_taken', 0) for r in hc_results]
+        demographics_analysis['by_has_children'][has_children_key] = {
+            'total_tests': hc_total,
+            'breaches': hc_breaches,
+            'breach_rate': hc_breaches / hc_total if hc_total > 0 else 0,
+            'avg_turns': statistics.mean(hc_turns) if hc_turns else 0,
+            'median_turns': statistics.median(hc_turns) if hc_turns else 0
+        }
+    
+    # 按种族统计
+    by_ethnicity = defaultdict(list)
+    for r in results:
+        ethnicity = r.get('profile', {}).get('demographics', {}).get('ethnicity', 'Unknown')
+        by_ethnicity[ethnicity].append(r)
+    
+    for ethnicity, eth_results in by_ethnicity.items():
+        eth_total = len(eth_results)
+        eth_breaches = sum(1 for r in eth_results if r.get('final_status') == 'TERMINATE_BREACH')
+        eth_turns = [r.get('turns_taken', 0) for r in eth_results]
+        demographics_analysis['by_ethnicity'][ethnicity] = {
+            'total_tests': eth_total,
+            'breaches': eth_breaches,
+            'breach_rate': eth_breaches / eth_total if eth_total > 0 else 0,
+            'avg_turns': statistics.mean(eth_turns) if eth_turns else 0,
+            'median_turns': statistics.median(eth_turns) if eth_turns else 0
+        }
+    
+    # 按地理位置统计
+    by_location = defaultdict(list)
+    for r in results:
+        location = r.get('profile', {}).get('demographics', {}).get('location', 'Unknown')
+        by_location[location].append(r)
+    
+    for location, loc_results in by_location.items():
+        loc_total = len(loc_results)
+        loc_breaches = sum(1 for r in loc_results if r.get('final_status') == 'TERMINATE_BREACH')
+        loc_turns = [r.get('turns_taken', 0) for r in loc_results]
+        demographics_analysis['by_location'][location] = {
+            'total_tests': loc_total,
+            'breaches': loc_breaches,
+            'breach_rate': loc_breaches / loc_total if loc_total > 0 else 0,
+            'avg_turns': statistics.mean(loc_turns) if loc_turns else 0,
+            'median_turns': statistics.median(loc_turns) if loc_turns else 0
+        }
+    
+    analysis['by_demographics'] = demographics_analysis
     
     # 分析每种越界方式的尝试次数和成功率
     attempt_stats = defaultdict(lambda: {'attempted': 0, 'succeeded': 0, 'failed': 0})
@@ -669,6 +869,104 @@ def print_analysis_report(analysis: Dict):
         print(f"    平均轮数: {stats['avg_turns']:.2f}")
     print()
     
+    # Demographics分析
+    if 'by_demographics' in analysis:
+        print("【按人口统计学特征统计】")
+        demo = analysis['by_demographics']
+        
+        # 按年龄组
+        if 'by_age_group' in demo and demo['by_age_group']:
+            print("\n  按年龄组:")
+            for age_group, stats in sorted(demo['by_age_group'].items()):
+                print(f"    {age_group}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按性别
+        if 'by_gender' in demo and demo['by_gender']:
+            print("\n  按性别:")
+            for gender, stats in sorted(demo['by_gender'].items()):
+                print(f"    {gender}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按收入
+        if 'by_income' in demo and demo['by_income']:
+            print("\n  按收入:")
+            for income, stats in sorted(demo['by_income'].items()):
+                print(f"    {income}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按教育水平
+        if 'by_education' in demo and demo['by_education']:
+            print("\n  按教育水平:")
+            for education, stats in sorted(demo['by_education'].items()):
+                print(f"    {education}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按职业
+        if 'by_occupation' in demo and demo['by_occupation']:
+            print("\n  按职业:")
+            sorted_occ = sorted(demo['by_occupation'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for occupation, stats in sorted_occ[:10]:  # 显示前10个
+                print(f"    {occupation}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按婚姻状况
+        if 'by_marital_status' in demo and demo['by_marital_status']:
+            print("\n  按婚姻状况:")
+            for marital_status, stats in sorted(demo['by_marital_status'].items()):
+                print(f"    {marital_status}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按是否有孩子
+        if 'by_has_children' in demo and demo['by_has_children']:
+            print("\n  按是否有孩子:")
+            for has_children, stats in sorted(demo['by_has_children'].items()):
+                print(f"    {has_children}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按种族
+        if 'by_ethnicity' in demo and demo['by_ethnicity']:
+            print("\n  按种族:")
+            sorted_eth = sorted(demo['by_ethnicity'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for ethnicity, stats in sorted_eth[:10]:  # 显示前10个
+                print(f"    {ethnicity}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        
+        # 按地理位置
+        if 'by_location' in demo and demo['by_location']:
+            print("\n  按地理位置:")
+            for location, stats in sorted(demo['by_location'].items()):
+                print(f"    {location}:")
+                print(f"      测试总数: {stats['total_tests']}")
+                print(f"      越界次数: {stats['breaches']}")
+                print(f"      越界比例: {stats['breach_rate']:.2%}")
+                print(f"      平均轮数: {stats['avg_turns']:.2f}")
+        print()
+    
     # 越界方式尝试次数和成功率统计
     if 'breach_attempt_analysis' in analysis:
         print("【每种越界方式的尝试次数和成功率统计】")
@@ -869,6 +1167,116 @@ def generate_markdown_report(analysis: Dict, base_dir: str) -> str:
     lines.append("")
     lines.append("---")
     lines.append("")
+    
+    # Demographics分析
+    if 'by_demographics' in analysis:
+        lines.append("## 👥 按人口统计学特征统计")
+        lines.append("")
+        demo = analysis['by_demographics']
+        
+        # 按年龄组
+        if 'by_age_group' in demo and demo['by_age_group']:
+            lines.append("### 按年龄组")
+            lines.append("")
+            lines.append("| 年龄组 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|--------|--------|--------|--------|----------|")
+            for age_group, stats in sorted(demo['by_age_group'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{age_group}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按性别
+        if 'by_gender' in demo and demo['by_gender']:
+            lines.append("### 按性别")
+            lines.append("")
+            lines.append("| 性别 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|------|--------|--------|--------|----------|")
+            for gender, stats in sorted(demo['by_gender'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{gender}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按收入
+        if 'by_income' in demo and demo['by_income']:
+            lines.append("### 按收入")
+            lines.append("")
+            lines.append("| 收入 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|------|--------|--------|--------|----------|")
+            for income, stats in sorted(demo['by_income'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{income}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按教育水平
+        if 'by_education' in demo and demo['by_education']:
+            lines.append("### 按教育水平")
+            lines.append("")
+            lines.append("| 教育水平 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|----------|--------|--------|--------|----------|")
+            for education, stats in sorted(demo['by_education'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{education}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按职业
+        if 'by_occupation' in demo and demo['by_occupation']:
+            lines.append("### 按职业")
+            lines.append("")
+            lines.append("| 职业 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|------|--------|--------|--------|----------|")
+            sorted_occ = sorted(demo['by_occupation'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for occupation, stats in sorted_occ[:15]:  # 显示前15个
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{occupation}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按婚姻状况
+        if 'by_marital_status' in demo and demo['by_marital_status']:
+            lines.append("### 按婚姻状况")
+            lines.append("")
+            lines.append("| 婚姻状况 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|----------|--------|--------|--------|----------|")
+            for marital_status, stats in sorted(demo['by_marital_status'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{marital_status}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按是否有孩子
+        if 'by_has_children' in demo and demo['by_has_children']:
+            lines.append("### 按是否有孩子")
+            lines.append("")
+            lines.append("| 是否有孩子 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|-----------|--------|--------|--------|----------|")
+            for has_children, stats in sorted(demo['by_has_children'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{has_children}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按种族
+        if 'by_ethnicity' in demo and demo['by_ethnicity']:
+            lines.append("### 按种族")
+            lines.append("")
+            lines.append("| 种族 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|------|--------|--------|--------|----------|")
+            sorted_eth = sorted(demo['by_ethnicity'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for ethnicity, stats in sorted_eth[:15]:  # 显示前15个
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{ethnicity}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # 按地理位置
+        if 'by_location' in demo and demo['by_location']:
+            lines.append("### 按地理位置")
+            lines.append("")
+            lines.append("| 地理位置 | 测试数 | 越界数 | 越界率 | 平均轮数 |")
+            lines.append("|----------|--------|--------|--------|----------|")
+            for location, stats in sorted(demo['by_location'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{location}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        lines.append("---")
+        lines.append("")
     
     # 按越界类型统计
     lines.append("## 🚨 按越界类型统计")
@@ -1316,6 +1724,116 @@ def generate_markdown_report_en(analysis: Dict, base_dir: str) -> str:
     lines.append("")
     lines.append("---")
     lines.append("")
+    
+    # Demographics Analysis
+    if 'by_demographics' in analysis:
+        lines.append("## 👥 Statistics by Demographics")
+        lines.append("")
+        demo = analysis['by_demographics']
+        
+        # By age group
+        if 'by_age_group' in demo and demo['by_age_group']:
+            lines.append("### By Age Group")
+            lines.append("")
+            lines.append("| Age Group | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|-----------|-------|----------|-------------|-----------|")
+            for age_group, stats in sorted(demo['by_age_group'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{age_group}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By gender
+        if 'by_gender' in demo and demo['by_gender']:
+            lines.append("### By Gender")
+            lines.append("")
+            lines.append("| Gender | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|--------|-------|----------|-------------|-----------|")
+            for gender, stats in sorted(demo['by_gender'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{gender}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By income
+        if 'by_income' in demo and demo['by_income']:
+            lines.append("### By Income")
+            lines.append("")
+            lines.append("| Income | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|--------|-------|----------|-------------|-----------|")
+            for income, stats in sorted(demo['by_income'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{income}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By education
+        if 'by_education' in demo and demo['by_education']:
+            lines.append("### By Education Level")
+            lines.append("")
+            lines.append("| Education Level | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|----------------|-------|----------|-------------|-----------|")
+            for education, stats in sorted(demo['by_education'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{education}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By occupation
+        if 'by_occupation' in demo and demo['by_occupation']:
+            lines.append("### By Occupation")
+            lines.append("")
+            lines.append("| Occupation | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|------------|-------|----------|-------------|-----------|")
+            sorted_occ = sorted(demo['by_occupation'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for occupation, stats in sorted_occ[:15]:  # Top 15
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{occupation}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By marital status
+        if 'by_marital_status' in demo and demo['by_marital_status']:
+            lines.append("### By Marital Status")
+            lines.append("")
+            lines.append("| Marital Status | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|----------------|-------|----------|-------------|-----------|")
+            for marital_status, stats in sorted(demo['by_marital_status'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{marital_status}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By has children
+        if 'by_has_children' in demo and demo['by_has_children']:
+            lines.append("### By Has Children")
+            lines.append("")
+            lines.append("| Has Children | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|--------------|-------|----------|-------------|-----------|")
+            for has_children, stats in sorted(demo['by_has_children'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{has_children}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By ethnicity
+        if 'by_ethnicity' in demo and demo['by_ethnicity']:
+            lines.append("### By Ethnicity")
+            lines.append("")
+            lines.append("| Ethnicity | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|----------|-------|----------|-------------|-----------|")
+            sorted_eth = sorted(demo['by_ethnicity'].items(), key=lambda x: x[1]['total_tests'], reverse=True)
+            for ethnicity, stats in sorted_eth[:15]:  # Top 15
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{ethnicity}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        # By location
+        if 'by_location' in demo and demo['by_location']:
+            lines.append("### By Location")
+            lines.append("")
+            lines.append("| Location | Tests | Breaches | Breach Rate | Avg Turns |")
+            lines.append("|---------|-------|----------|-------------|-----------|")
+            for location, stats in sorted(demo['by_location'].items()):
+                breach_rate_pct = stats['breach_rate'] * 100
+                lines.append(f"| **{location}** | {stats['total_tests']} | {stats['breaches']} | **{breach_rate_pct:.2f}%** | {stats['avg_turns']:.2f} |")
+            lines.append("")
+        
+        lines.append("---")
+        lines.append("")
     
     # Statistics by main condition type
     lines.append("## 🏥 Statistics by Main Condition Type (ignoring \"with\" part)")
