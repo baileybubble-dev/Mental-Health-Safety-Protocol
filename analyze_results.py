@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-分析 experiment_results/run2/as=openai 目录下的实验结果
+分析 experiment_results/run3 目录下的实验结果
 """
 
 import json
@@ -420,7 +420,7 @@ def print_analysis_report(analysis: Dict):
     print("=" * 80)
 
 def main():
-    base_dir = "experiment_results/run2/as=openai"
+    base_dir = "experiment_results/run3"
     
     print(f"正在加载结果文件从: {base_dir}")
     results = load_all_results(base_dir)
@@ -432,7 +432,7 @@ def main():
     print_analysis_report(analysis)
     
     # 保存JSON格式的分析结果
-    output_file = "experiment_results/run2/as=openai/analysis_report.json"
+    output_file = "experiment_results/run3/analysis_report.json"
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(analysis, f, indent=2, ensure_ascii=False)
