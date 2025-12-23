@@ -73,7 +73,7 @@ def create_as_generate_node(as_llm):
         profile = state["profile"]
         turn = state.get("current_turn", 1)
 
-        template = load_prompt("AS_Generate_System.md")
+        template = load_prompt("AS_System_Protocol.md")
 
         probing_method = format_probing_methodology(profile.get("probing_methodology", {}))
         demographics = format_demographics(profile.get("demographics", {}))
@@ -114,6 +114,11 @@ def create_as_generate_node(as_llm):
         except Exception as e:
             print(f"!!! AS_generate Error: {e}")
             simulated_text = "I..."
+            print(f"\n{'='*80}")
+            print(f"[AS_generate] Turn {turn} Output (Error Fallback):")
+            print(f"{'='*80}")
+            print(f"Generated Message:\n{simulated_text}")
+            print(f"{'='*80}\n")
             return {"messages": [HumanMessage(content=simulated_text, name="AS")]}
 
         raw = content_to_text(response.content).strip()
@@ -133,6 +138,13 @@ def create_as_generate_node(as_llm):
 
         if not simulated_text:
             simulated_text = "I..."
+
+        # Print AS_generate output
+        print(f"\n{'='*80}")
+        print(f"[AS_generate] Turn {turn} Output:")
+        print(f"{'='*80}")
+        print(f"Generated Message:\n{simulated_text}")
+        print(f"{'='*80}\n")
 
         return {"messages": [HumanMessage(content=simulated_text, name="AS")]}
 
@@ -155,12 +167,24 @@ def create_sut_node(sut_llm):
         except Exception as e:
             print(f"!!! SUT Error at Turn {turn}: {e}")
             error_msg = f"[SUT Error: {str(e)}. Possible timeout/API issue.]"
+            print(f"\n{'='*80}")
+            print(f"[SUT] Turn {turn} Output (Error):")
+            print(f"{'='*80}")
+            print(f"SUT Response:\n{error_msg}")
+            print(f"{'='*80}\n")
             return {"messages": [AIMessage(content=error_msg, name="SUT")]}
 
         raw_content = content_to_text(response.content)
 
         if not raw_content or raw_content.strip() == "":
             raw_content = "[SUT response empty/unparsed. Possible safety filter or API issue.]"
+
+        # Print SUT output
+        print(f"\n{'='*80}")
+        print(f"[SUT] Turn {turn} Output:")
+        print(f"{'='*80}")
+        print(f"SUT Response:\n{raw_content}")
+        print(f"{'='*80}\n")
 
         return {"messages": [AIMessage(content=raw_content, name="SUT")]}
 
@@ -183,12 +207,29 @@ def create_as_judge_plan_node(as_llm):
         profile = state["profile"]
         demographics = format_demographics(profile.get("demographics", {}))
 
+        probing_method = format_probing_methodology(profile.get("probing_methodology", {}))
+
         judge_prompt = (template
             .replace("{{id}}", _ensure_str(profile.get("id")))
+            .replace("{{test_type}}", _ensure_str(profile.get("test_type", "Single-Vector")))
+            .replace("{{conflict_logic}}", _ensure_str(profile.get("conflict_logic", "N/A")))
             .replace("{{demographics}}", demographics)
+            .replace("{{behavioral_phenotype}}", _ensure_str(profile.get("behavioral_phenotype")))
+            .replace("{{core_cognitive_vulnerability}}", _ensure_str(profile.get("core_cognitive_vulnerability")))
+            .replace("{{probing_methodology}}", probing_method)
+            .replace("{{alignment_departure_criteria}}", _ensure_str(profile.get("alignment_departure_criteria")))
+            .replace("{{re_calibration_strategy}}", _ensure_str(profile.get("re_calibration_strategy")))
+            .replace("{{linguistic_fingerprint}}", _ensure_str(profile.get("linguistic_fingerprint")))
+            .replace("{{target_language}}", _ensure_str(profile.get("target_language")))
             .replace("{{CURRENT_TURN}}", str(turn))
+            .replace("{{LAST_STRATEGY}}", _ensure_str(state.get("last_strategy", "[None]")))
+            .replace("{{LAST_BOUNDARY_ASSESSMENT}}", _ensure_str(state.get("last_boundary_assessment", "[None]")))
+            .replace("{{LAST_PRESSURE_LEVEL}}", str(_safe_int(state.get("last_pressure_level", 5), 5)))
         )
 
+        if "{{" in judge_prompt:
+            print("!!! WARNING: Unfilled placeholders remain in AS_Judge_System.md")
+            
         try:
             print(f"--- [AS_judge] Turn {turn}: Invoking LLM... ---")
             import time
@@ -209,6 +250,14 @@ def create_as_judge_plan_node(as_llm):
                 "next_round_strategy": "[Judge error]",
                 "error": str(e),
             }
+            # Print AS_judge_plan error output
+            print(f"\n{'='*80}")
+            print(f"[AS_judge_plan] Turn {turn} Output (Error Fallback):")
+            print(f"{'='*80}")
+            print(f"Research Status: PROCEED (Error occurred)")
+            print(f"Pressure Level: {research['pressure_level']}")
+            print(f"\nError: {str(e)}")
+            print(f"{'='*80}\n")
             return {
                 "analysis_logs": [research],
                 "final_status": "PROCEED",
@@ -263,7 +312,21 @@ def create_as_judge_plan_node(as_llm):
         # Add turn marker into log entry for easy plotting
         research_log = {"turn": turn, **research}
 
-        print(f"--- [Audit] Turn {turn} | Status: {final_status} | pressure={pressure_level} ---")
+        # Print AS_judge_plan output
+        print(f"\n{'='*80}")
+        print(f"[AS_judge_plan] Turn {turn} Output:")
+        print(f"{'='*80}")
+        print(f"Research Status: {final_status}")
+        print(f"Pressure Level: {pressure_level}")
+        print(f"\nBoundary Assessment:")
+        print(f"  {research.get('boundary_assessment', '[Missing]')}")
+        print(f"\nApplied Methodology:")
+        print(f"  {research.get('applied_methodology', '[Missing]')}")
+        print(f"\nStress Indicators:")
+        print(f"  {research.get('stress_indicators', '[Missing]')}")
+        print(f"\nNext Round Strategy:")
+        print(f"  {research.get('next_round_strategy', '[Missing]')}")
+        print(f"{'='*80}\n")
 
         return {
             "analysis_logs": [research_log],
