@@ -196,7 +196,7 @@ def build_graph(as_llm, sut_llm):
 
 # --- 3. Batch Processing and Execution ---
 
-def run_batch(profiles_path: str, output_dir: str, as_provider: str, sut_provider: str):
+def run_batch(profiles_path: str, output_dir: str, as_provider: str, sut_provider: str, as_api_key: str = None, sut_api_key: str = None, as_model: str = None, sut_model: str = None):
     """Run batch experiments with specified LLM providers.
     
     Args:
@@ -204,17 +204,29 @@ def run_batch(profiles_path: str, output_dir: str, as_provider: str, sut_provide
         output_dir: Output directory for results
         as_provider: Provider for AS (Adversarial Simulator)
         sut_provider: Provider for SUT (System Under Test)
+        as_api_key: Optional API key for AS model (overrides environment variable)
+        sut_api_key: Optional API key for SUT model (overrides environment variable)
+        as_model: Optional model name for AS (e.g., "gpt-4", "gpt-3.5-turbo")
+        sut_model: Optional model name for SUT (e.g., "gpt-4", "gpt-3.5-turbo")
     """
     if not os.path.exists(output_dir): os.makedirs(output_dir)
     with open(profiles_path, "r", encoding="utf-8") as f:
         profiles = json.load(f)
     
-    # Initialize LLM models
-    as_llm = build_chat_model(as_provider, "AS", 0.8)
-    sut_llm = build_chat_model(sut_provider, "SUT", 0.0)
+    # Initialize LLM models with optional API keys and model names
+    as_llm = build_chat_model(as_provider, "AS", 0.8, model_name_override=as_model, api_key=as_api_key)
+    sut_llm = build_chat_model(sut_provider, "SUT", 0.0, model_name_override=sut_model, api_key=sut_api_key)
     
     print(f"AS Provider: {as_provider}")
     print(f"SUT Provider: {sut_provider}")
+    if as_model:
+        print(f"AS Model: {as_model}")
+    if sut_model:
+        print(f"SUT Model: {sut_model}")
+    if as_api_key:
+        print(f"AS API Key: {as_api_key[:10]}... (custom)")
+    if sut_api_key:
+        print(f"SUT API Key: {sut_api_key[:10]}... (custom)")
     
     app = build_graph(as_llm, sut_llm)
     for profile in profiles:
@@ -255,6 +267,15 @@ Examples:
   
   # Specify providers
   python main.py --asp openai --sut deepseek
+  
+  # Use same model but different API keys
+  python main.py --asp openai --sut openai --asp-api-key sk-xxx --sut-api-key sk-yyy
+  
+  # Use same vendor but different model versions
+  python main.py --asp openai --sut openai --asp-model gpt-5.2 --sut-model gpt-5-mini
+  
+  # Combine: same vendor, different models and API keys
+  python main.py --asp openai --sut openai --asp-model gpt-5.2 --sut-model gpt-5-mini --asp-api-key sk-xxx --sut-api-key sk-yyy
         """
     )
     parser.add_argument(
@@ -270,6 +291,30 @@ Examples:
         default=None,
         choices=["openai", "deepseek", "gemini", "xai"],
         help="Provider for SUT (System Under Test) LLM. Default: deepseek (or SUT_PROVIDER env var)"
+    )
+    parser.add_argument(
+        "--asp-api-key",
+        type=str,
+        default=None,
+        help="API key for AS model (overrides environment variable). Allows using same model with different API keys."
+    )
+    parser.add_argument(
+        "--sut-api-key",
+        type=str,
+        default=None,
+        help="API key for SUT model (overrides environment variable). Allows using same model with different API keys."
+    )
+    parser.add_argument(
+        "--asp-model",
+        type=str,
+        default=None,
+        help="Model name for AS (e.g., 'gpt-5.2', 'gpt-5.1-mini', 'gemini-2.5-flash'). Overrides environment variable and default."
+    )
+    parser.add_argument(
+        "--sut-model",
+        type=str,
+        default=None,
+        help="Model name for SUT (e.g., 'gpt-5.2', 'gpt-5.1-mini', 'gemini-2.5-flash'). Overrides environment variable and default."
     )
     parser.add_argument(
         "--profiles",
@@ -288,4 +333,13 @@ Examples:
 if __name__ == "__main__":
     args = parse_args()
     
-    run_batch(args.profiles, f"{args.output_dir}/{args.sut}", args.asp, args.sut)
+    run_batch(
+        args.profiles, 
+        f"{args.output_dir}/{args.sut}", 
+        args.asp, 
+        args.sut,
+        as_api_key=args.asp_api_key,
+        sut_api_key=args.sut_api_key,
+        as_model=args.asp_model,
+        sut_model=args.sut_model
+    )
