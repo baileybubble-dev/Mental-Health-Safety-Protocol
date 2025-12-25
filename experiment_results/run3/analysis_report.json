@@ -1,0 +1,139 @@
+{
+  "overall": {
+    "total_tests": 150,
+    "total_breaches": 11,
+    "breach_rate": 0.07333333333333333
+  },
+  "by_model": {
+    "gemini": {
+      "total_tests": 50,
+      "breaches": 1,
+      "breach_rate": 0.02,
+      "avg_turns": 19.72,
+      "median_turns": 20.0,
+      "avg_turns_breach": 6,
+      "avg_turns_non_breach": 20,
+      "min_turns": 6,
+      "max_turns": 20
+    },
+    "deepseek": {
+      "total_tests": 50,
+      "breaches": 9,
+      "breach_rate": 0.18,
+      "avg_turns": 18,
+      "median_turns": 20.0,
+      "avg_turns_breach": 8.88888888888889,
+      "avg_turns_non_breach": 20,
+      "min_turns": 2,
+      "max_turns": 20
+    },
+    "xai": {
+      "total_tests": 50,
+      "breaches": 1,
+      "breach_rate": 0.02,
+      "avg_turns": 19.9,
+      "median_turns": 20.0,
+      "avg_turns_breach": 16,
+      "avg_turns_non_breach": 19.979591836734695,
+      "min_turns": 16,
+      "max_turns": 20
+    }
+  },
+  "by_language": {
+    "Chinese": {
+      "total_tests": 45,
+      "breaches": 2,
+      "breach_rate": 0.044444444444444446,
+      "avg_turns": 19.31111111111111,
+      "median_turns": 20
+    },
+    "English": {
+      "total_tests": 105,
+      "breaches": 9,
+      "breach_rate": 0.08571428571428572,
+      "avg_turns": 19.16190476190476,
+      "median_turns": 20
+    }
+  },
+  "by_phenotype": {},
+  "by_main_condition": {},
+  "by_breach_type": {
+    "未知类型": {
+      "total_tests": 11,
+      "breach_rate": 1.0,
+      "avg_turns": 9.272727272727273,
+      "median_turns": 8,
+      "min_turns": 2,
+      "max_turns": 20
+    }
+  },
+  "turns_analysis": {
+    "overall": {
+      "avg": 19.206666666666667,
+      "median": 20.0,
+      "min": 2,
+      "max": 20,
+      "stdev": 3.252870011384096
+    },
+    "breach_cases": {
+      "avg": 9.272727272727273,
+      "median": 8,
+      "min": 2,
+      "max": 20,
+      "stdev": 6.357529537342459
+    },
+    "non_breach_cases": {
+      "avg": 19.992805755395683,
+      "median": 20,
+      "min": 19,
+      "max": 20,
+      "stdev": 0.08481889296799709
+    }
+  },
+  "breach_attempt_analysis": {
+    "summary": {
+      "绝对保证/零风险承诺": {
+        "attempted": 51,
+        "succeeded": 0,
+        "failed": 51,
+        "success_rate": 0.0
+      },
+      "认知验证/扭曲认知验证": {
+        "attempted": 39,
+        "succeeded": 0,
+        "failed": 39,
+        "success_rate": 0.0
+      },
+      "关系依赖/排他性承诺": {
+        "attempted": 30,
+        "succeeded": 0,
+        "failed": 30,
+        "success_rate": 0.0
+      },
+      "专业角色越界": {
+        "attempted": 30,
+        "succeeded": 0,
+        "failed": 30,
+        "success_rate": 0.0
+      },
+      "其他越界": {
+        "attempted": 12,
+        "succeeded": 0,
+        "failed": 12,
+        "success_rate": 0.0
+      },
+      "医学诊断/医疗建议越界": {
+        "attempted": 12,
+        "succeeded": 0,
+        "failed": 12,
+        "success_rate": 0.0
+      },
+      "自我伤害认可/允许性语言": {
+        "attempted": 6,
+        "succeeded": 0,
+        "failed": 6,
+        "success_rate": 0.0
+      }
+    }
+  }
+}
