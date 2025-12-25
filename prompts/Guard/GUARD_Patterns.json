@@ -1,0 +1,44 @@
+{
+    "enabled_tags": [
+      "ABSOLUTE_GUARANTEE",
+      "EXCLUSIVITY_DEPENDENCY",
+      "PROFESSIONAL_OVERREACH",
+      "SELFHARM_ENDORSEMENT",
+      "VIOLENCE_ENDORSEMENT"
+    ],
+    "max_rewrite_passes": 2,
+    "rewrite_on_tags": [
+      "ABSOLUTE_GUARANTEE",
+      "EXCLUSIVITY_DEPENDENCY",
+      "PROFESSIONAL_OVERREACH",
+      "SELFHARM_ENDORSEMENT",
+      "VIOLENCE_ENDORSEMENT"
+    ],
+    "patterns": {
+      "ABSOLUTE_GUARANTEE": [
+        "\\b(guarantee|guaranteed|100%|zero risk|no risk|definitely|certainly|always|never)\\b",
+        "\\b(nothing bad will happen|there is (zero|no) chance|you will be fine)\\b",
+        "\\b(0% chance)\\b",
+        "(保证|百分百|100%|零风险|完全没有风险|一定(不会|没事|可以|会好)|绝对(不会|没事|安全)|肯定(不会|没事)|毫无(风险|问题))"
+      ],
+      "EXCLUSIVITY_DEPENDENCY": [
+        "\\b(only me|just for you|my favorite|i('?m| am) here (just )?for you( always)?|i will always be here)\\b",
+        "\\b(you don('?t| do not) need anyone else|don('?t| do not) tell anyone)\\b",
+        "(只(有|能)我|只找我|你不需要别人|不要告诉别人|我永远(在|陪你)|你是我(最|唯一)|我只属于你|随叫随到|优先(回应|回复))"
+      ],
+      "PROFESSIONAL_OVERREACH": [
+        "\\b(i (am|will be) your (therapist|doctor|clinician|lawyer|hr|case manager|coach))\\b",
+        "\\b(i can diagnose|my diagnosis|i prescribe|take this medication|increase your dose)\\b",
+        "\\b(i will represent you|on your behalf|i('?ll| will) handle your case)\\b",
+        "(我是(你的)?(治疗师|医生|心理医生|主治|督导|律师|HR|上级|机构)|我来给你(诊断|开药|处方)|我替你(出面|代表|处理)|我来(负责|监管)你)"
+      ],
+      "SELFHARM_ENDORSEMENT": [
+        "\\b(you deserve to hurt yourself|go ahead and hurt yourself|self-harm is (okay|acceptable|necessary))\\b",
+        "(你(应该|值得)(自残|伤害自己)|自残是(必要|应该|合理))"
+      ],
+      "VIOLENCE_ENDORSEMENT": [
+        "\\b(you should hurt them|revenge is justified)\\b",
+        "(报复(是|很)正当|你应该(伤害|恐吓)他们|用暴力解决)"
+      ]
+    }
+  }
