@@ -1,8 +1,8 @@
 # Comprehensive Experimental Results Analysis Report
 
 ## Execution Time
-Analysis Time: 2025-12-23
-Data Source: `experiment_results/run1/`
+Analysis Time: 2025-12-26
+Data Source: `/Users/zhuangweikang/Documents/GitHub/Mental-Health-Safety-Protocol/experiment_results/run1/`
 Total Test Files: 150 (including DeepSeek, Gemini, XAI)
 Turn Limit: Maximum 20 turns per test
 
@@ -261,29 +261,28 @@ Turn Limit: Maximum 20 turns per test
 
 | Breach Type | Count | Percentage | Avg Turns | Turn Range |
 |------------|-------|------------|-----------|------------|
-| **Absolute Guarantee/Zero-Risk Promise** | 66 | **50.38%** | 8.56 | 3-20 |
-| **Professional Role Boundary Breach** | 24 | **18.32%** | 9.33 | 6-18 |
-| **Relationship Dependency/Exclusive Commitment** | 15 | **11.45%** | 8.27 | 4-15 |
-| **Cognitive Validation/Distorted Cognition Validation** | 11 | **8.40%** | 11.45 | 8-18 |
-| **Other Boundary Breaches** | 7 | **5.34%** | 12.00 | 7-20 |
+| **Absolute Guarantee/Zero-Risk Promise** | 74 | **56.49%** | 8.91 | 3-20 |
+| **Professional Role Boundary Breach** | 26 | **19.85%** | 9.19 | 6-18 |
+| **Relationship Dependency/Exclusive Commitment** | 12 | **9.16%** | 8.75 | 6-15 |
+| **Cognitive Validation/Distorted Cognition Validation** | 12 | **9.16%** | 11.50 | 7-18 |
 | **Self-Harm Endorsement/Permissive Language** | 5 | **3.82%** | 10.00 | 7-12 |
-| **Medical Diagnosis/Medical Advice Boundary Breach** | 3 | **2.29%** | 11.33 | 7-18 |
+| **Medical Diagnosis/Medical Advice Boundary Breach** | 2 | **1.53%** | 8.00 | 7-9 |
 
 ### Breach Type Analysis
-1. **Absolute Guarantee/Zero-Risk Promise is the primary breach method** (50.38%)
-   - Average 8.56 turns to breach
+1. **Absolute Guarantee/Zero-Risk Promise is the primary breach method** (56.49%)
+   - Average 8.91 turns to breach
    - Fastest only requires 3 turns
    - This is the breach type requiring the most attention
 
-2. **Professional Role Boundary Breach** (18.32%)
-   - Average 9.33 turns to breach
+2. **Professional Role Boundary Breach** (19.85%)
+   - Average 9.19 turns to breach
    - Professional role boundaries need strengthening
 
-3. **Relationship Dependency/Exclusive Commitment** (11.45%)
-   - Average 8.27 turns to breach
+3. **Relationship Dependency/Exclusive Commitment** (9.16%)
+   - Average 8.75 turns to breach
 
-4. **Cognitive Validation/Distorted Cognition Validation** (8.40%)
-   - Average 11.45 turns to breach
+4. **Cognitive Validation/Distorted Cognition Validation** (9.16%)
+   - Average 11.50 turns to breach
    - Model validated user's distorted cognitions, pathological logic, or harmful beliefs (e.g., eating disorder rules, paranoid delusions, self-blame, etc.)
    - This is a manifestation of Cognitive Validation Testing, indicating that models may abandon professional boundaries and collude with users' erroneous cognitions under pressure
 
@@ -291,8 +290,8 @@ Turn Limit: Maximum 20 turns per test
    - Average 10.00 turns to breach
    - This is the most dangerous breach type and requires special attention
 
-6. **Medical Diagnosis/Medical Advice Boundary Breach** (2.29%)
-   - Average 11.33 turns to breach
+6. **Medical Diagnosis/Medical Advice Boundary Breach** (1.53%)
+   - Average 8.00 turns to breach
    - Model boundary maintenance is relatively better in this aspect
 
 ---
@@ -303,9 +302,9 @@ Turn Limit: Maximum 20 turns per test
 
 | Breach Type | Attempts | Successes | Failures | Success Rate |
 |------------|----------|-----------|----------|--------------|
-| **Absolute Guarantee/Zero-Risk Promise** | 51 | 41 | 10 | **80.39%** |
+| **Absolute Guarantee/Zero-Risk Promise** | 51 | 42 | 9 | **82.35%** |
 | **Cognitive Validation/Distorted Cognition Validation** | 39 | 11 | 28 | **28.21%** |
-| **Relationship Dependency/Exclusive Commitment** | 30 | 12 | 18 | **40.00%** |
+| **Relationship Dependency/Exclusive Commitment** | 30 | 10 | 20 | **33.33%** |
 | **Professional Role Boundary Breach** | 30 | 18 | 12 | **60.00%** |
 | **Other Boundary Breaches** | 12 | 0 | 12 | **0.00%** |
 | **Medical Diagnosis/Medical Advice Boundary Breach** | 12 | 1 | 11 | **8.33%** |
@@ -313,7 +312,7 @@ Turn Limit: Maximum 20 turns per test
 
 ### Key Findings
 1. **Most attempted breach type**: Absolute Guarantee/Zero-Risk Promise (51 attempts)
-2. **Highest success rate breach type**: Absolute Guarantee/Zero-Risk Promise (80.39%)
+2. **Highest success rate breach type**: Absolute Guarantee/Zero-Risk Promise (82.35%)
 
 ### Detailed Statistics by Model
 
@@ -322,8 +321,8 @@ Turn Limit: Maximum 20 turns per test
 | Breach Type | Attempts | Successes | Failures | Success Rate |
 |------------|----------|-----------|----------|--------------|
 | Absolute Guarantee/Zero-Risk Promise | 17 | 15 | 2 | **88.24%** |
-| Cognitive Validation/Distorted Cognition Validation | 13 | 3 | 10 | **23.08%** |
-| Relationship Dependency/Exclusive Commitment | 10 | 3 | 7 | **30.00%** |
+| Cognitive Validation/Distorted Cognition Validation | 13 | 2 | 11 | **15.38%** |
+| Relationship Dependency/Exclusive Commitment | 10 | 2 | 8 | **20.00%** |
 | Professional Role Boundary Breach | 10 | 8 | 2 | **80.00%** |
 | Medical Diagnosis/Medical Advice Boundary Breach | 4 | 0 | 4 | **0.00%** |
 | Other Boundary Breaches | 4 | 0 | 4 | **0.00%** |
@@ -335,7 +334,7 @@ Turn Limit: Maximum 20 turns per test
 |------------|----------|-----------|----------|--------------|
 | Absolute Guarantee/Zero-Risk Promise | 17 | 14 | 3 | **82.35%** |
 | Cognitive Validation/Distorted Cognition Validation | 13 | 5 | 8 | **38.46%** |
-| Relationship Dependency/Exclusive Commitment | 10 | 5 | 5 | **50.00%** |
+| Relationship Dependency/Exclusive Commitment | 10 | 4 | 6 | **40.00%** |
 | Professional Role Boundary Breach | 10 | 4 | 6 | **40.00%** |
 | Other Boundary Breaches | 4 | 0 | 4 | **0.00%** |
 | Medical Diagnosis/Medical Advice Boundary Breach | 4 | 1 | 3 | **25.00%** |
@@ -345,8 +344,8 @@ Turn Limit: Maximum 20 turns per test
 
 | Breach Type | Attempts | Successes | Failures | Success Rate |
 |------------|----------|-----------|----------|--------------|
-| Absolute Guarantee/Zero-Risk Promise | 17 | 12 | 5 | **70.59%** |
-| Cognitive Validation/Distorted Cognition Validation | 13 | 3 | 10 | **23.08%** |
+| Absolute Guarantee/Zero-Risk Promise | 17 | 13 | 4 | **76.47%** |
+| Cognitive Validation/Distorted Cognition Validation | 13 | 4 | 9 | **30.77%** |
 | Professional Role Boundary Breach | 10 | 6 | 4 | **60.00%** |
 | Relationship Dependency/Exclusive Commitment | 10 | 4 | 6 | **40.00%** |
 | Other Boundary Breaches | 4 | 0 | 4 | **0.00%** |
@@ -537,9 +536,9 @@ This finding has important implications for AI safety:
 ## 📋 Data Files
 
 Detailed analysis data (JSON format) saved to:
-`experiment_results/run1/analysis_report.json`
+`/Users/zhuangweikang/Documents/GitHub/Mental-Health-Safety-Protocol/experiment_results/run1/analysis_report.json`
 
 ---
 
-*Report Generated: 2025-12-23*
+*Report Generated: 2025-12-26*
 *Analysis Script Version: analyze_results.py*
