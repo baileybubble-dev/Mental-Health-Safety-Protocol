@@ -15,9 +15,10 @@ import numpy as np
 import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-RUN1_DIR = SCRIPT_DIR / "run1"
-RUN2_DIR = SCRIPT_DIR / "run2"
-ANALYZE_DIR = SCRIPT_DIR / "run1"  # for classify_breach_type
+RESULTS_DIR = SCRIPT_DIR.parent
+RUN1_DIR = RESULTS_DIR / "run1"
+RUN2_DIR = RESULTS_DIR / "run2"
+ANALYZE_DIR = RUN1_DIR  # for classify_breach_type
 OUT_PNG = SCRIPT_DIR / "condition_breach_heatmap.png"
 TOP_N_CONDITIONS = 12
 
@@ -86,9 +87,9 @@ def build_matrix(rows, cond_set):
             continue
         mat.loc[cond_mapped, bt] += 1
     mat_pct = mat.div(mat.sum(axis=1), axis=0).fillna(0) * 100
-    return mat_pct
+    return mat, mat_pct
 
-def plot_heatmap(mat1_pct, mat2_pct, outfile):
+def plot_heatmap(mat1_counts, mat1_pct, mat2_counts, mat2_pct, outfile):
     matplotlib.rcParams["font.sans-serif"] = [
         "Arial Unicode MS", "Noto Sans CJK SC", "Microsoft YaHei",
         "PingFang SC", "Heiti SC", "DejaVu Sans",
@@ -98,13 +99,18 @@ def plot_heatmap(mat1_pct, mat2_pct, outfile):
     all_cols = sorted(set(mat1_pct.columns) | set(mat2_pct.columns))
     mat1 = mat1_pct.reindex(columns=all_cols, fill_value=0)
     mat2 = mat2_pct.reindex(columns=all_cols, fill_value=0)
+    mat1_counts = mat1_counts.reindex(columns=all_cols, fill_value=0)
+    mat2_counts = mat2_counts.reindex(columns=all_cols, fill_value=0)
 
     n_rows = max(len(mat1), len(mat2))
     fig, axes = plt.subplots(
         1, 2, figsize=(18, max(8, n_rows * 0.5)), sharey=True
     )
-    for ax, mat_pct, title in zip(
-        axes, [mat1, mat2], ["Static Progression", "Adaptive Probing"]
+    for ax, mat_counts, mat_pct, title in zip(
+        axes,
+        [mat1_counts, mat2_counts],
+        [mat1, mat2],
+        ["Static Progression", "Adaptive Probing"],
     ):
         im = ax.imshow(mat_pct.values, cmap="YlOrRd", aspect="auto", vmin=0, vmax=100)
         xlabels = [BREACH_LABELS_EN.get(x, x) for x in mat_pct.columns]
@@ -114,10 +120,20 @@ def plot_heatmap(mat1_pct, mat2_pct, outfile):
         ax.set_yticklabels(mat_pct.index, fontsize=16)
         ax.set_title(title, fontsize=20)
         for i in range(mat_pct.shape[0]):
+            row_total = int(mat_counts.iloc[i].sum())
             for j in range(mat_pct.shape[1]):
                 val = mat_pct.iat[i, j]
+                count = int(mat_counts.iat[i, j])
                 if val > 0:
-                    ax.text(j, i, f"{val:.0f}%", ha="center", va="center", fontsize=15, color="black")
+                    ax.text(
+                        j,
+                        i,
+                        f"{count}/{row_total}\n({val:.0f}%)",
+                        ha="center",
+                        va="center",
+                        fontsize=11,
+                        color="black",
+                    )
 
     # shared colorbar on the right, vertical
     cbar = fig.colorbar(
@@ -133,7 +149,7 @@ def plot_heatmap(mat1_pct, mat2_pct, outfile):
     # leave room for long x-labels and colorbar
     plt.subplots_adjust(left=0.13, right=0.86, bottom=0.24, top=0.93, wspace=0.12)
     outfile.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(outfile, dpi=200)
+    plt.savefig(outfile, dpi=400)
     plt.close()
 
 def main():
@@ -186,12 +202,14 @@ def main():
     cond_set = top_conditions + (["Other"] if any(c not in top_conditions for c in cond_counts) else [])
     cond_display = [CONDITION_SHORT.get(c, c) for c in cond_set]
 
-    mat1_pct = build_matrix(rows1, cond_set)
-    mat2_pct = build_matrix(rows2, cond_set)
+    mat1_counts, mat1_pct = build_matrix(rows1, cond_set)
+    mat2_counts, mat2_pct = build_matrix(rows2, cond_set)
+    mat1_counts.index = cond_display
     mat1_pct.index = cond_display
+    mat2_counts.index = cond_display
     mat2_pct.index = cond_display
 
-    plot_heatmap(mat1_pct, mat2_pct, OUT_PNG)
+    plot_heatmap(mat1_counts, mat1_pct, mat2_counts, mat2_pct, OUT_PNG)
 
 if __name__ == "__main__":
     main()

@@ -28,6 +28,7 @@ except ImportError:  # pragma: no cover - optional dependency
 
 
 ROOT = Path(__file__).resolve().parent
+RESULTS_DIR = ROOT.parent
 RUNS = ["run1", "run2"]
 MODELS = ["deepseek", "gemini", "xai"]
 OUT_FIG = ROOT / "failure_modes_pie.png"
@@ -56,7 +57,7 @@ BREACH_TYPE_EN = {
 # Optional: import classify_breach_type for fallback when breach_type is missing
 CLASSIFIER = None
 try:
-    sys.path.insert(0, str(ROOT / "run1"))
+    sys.path.insert(0, str(RESULTS_DIR / "run1"))
     from analyze_results import classify_breach_type  # type: ignore
 
     CLASSIFIER = classify_breach_type
@@ -78,7 +79,7 @@ def translate_breach_type(breach_type: str) -> str:
 def load_breach_types_run(run: str) -> Counter:
     """Collect breach_type counts for one run."""
     counter: Counter = Counter()
-    run_dir = ROOT / run
+    run_dir = RESULTS_DIR / run
     for path in iter_json_files(run_dir):
         with path.open(encoding="utf-8") as f:
             data = json.load(f)
@@ -185,10 +186,10 @@ def plot_pies(by_run: Dict[str, Counter]) -> None:
             ang = (wedge.theta2 + wedge.theta1) / 2.0
             x = wedge.r * 0.7 * np.cos(np.deg2rad(ang))
             y = wedge.r * 0.7 * np.sin(np.deg2rad(ang))
-            display = f"{pct:.1f}%"
+            display = f"{count}/{total}\n({pct:.1f}%)"
             if pct < 8:
                 # place outside with arrow
-                offset = 1.05
+                offset = 1.15
                 ox = offset * np.cos(np.deg2rad(ang))
                 oy = offset * np.sin(np.deg2rad(ang))
                 ax.annotate(
@@ -197,11 +198,11 @@ def plot_pies(by_run: Dict[str, Counter]) -> None:
                     xytext=(ox, oy),
                     ha="center",
                     va="center",
-                    fontsize=10,
+                    fontsize=9,
                     arrowprops=dict(arrowstyle="-", connectionstyle="arc3,rad=0.2", color="gray"),
                 )
             else:
-                ax.text(x, y, display, ha="center", va="center", fontsize=10, color="black")
+                ax.text(x, y, display, ha="center", va="center", fontsize=9, color="black")
 
     fig.suptitle("Failure modes by strategy", fontsize=18)
     if legend_handles:
@@ -234,4 +235,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
