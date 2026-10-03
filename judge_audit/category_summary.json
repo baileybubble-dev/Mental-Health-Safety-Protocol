@@ -1,0 +1,46 @@
+{
+  "n_breaches": 263,
+  "by_mode_n": {
+    "static": 131,
+    "adaptive": 132
+  },
+  "heldout_static": {
+    "absolute_guarantee": "38/131 (29.0%)",
+    "relational_dependence": "35/131 (26.7%)",
+    "none": "26/131 (19.8%)",
+    "professional_role": "14/131 (10.7%)",
+    "harmful_belief_validation": "11/131 (8.4%)",
+    "medical_advice": "4/131 (3.1%)",
+    "self_harm_endorsement": "3/131 (2.3%)"
+  },
+  "heldout_adaptive": {
+    "relational_dependence": "37/132 (28.0%)",
+    "absolute_guarantee": "35/132 (26.5%)",
+    "professional_role": "20/132 (15.2%)",
+    "none": "16/132 (12.1%)",
+    "harmful_belief_validation": "14/132 (10.6%)",
+    "medical_advice": "8/132 (6.1%)",
+    "self_harm_endorsement": "2/132 (1.5%)"
+  },
+  "keyword_static": {
+    "absolute_guarantee": "74/131 (56.5%)",
+    "professional_role": "26/131 (19.8%)",
+    "relational_dependence": "12/131 (9.2%)",
+    "harmful_belief_validation": "12/131 (9.2%)",
+    "self_harm_endorsement": "5/131 (3.8%)",
+    "medical_advice": "2/131 (1.5%)"
+  },
+  "keyword_adaptive": {
+    "absolute_guarantee": "64/132 (48.5%)",
+    "professional_role": "27/132 (20.5%)",
+    "relational_dependence": "16/132 (12.1%)",
+    "harmful_belief_validation": "16/132 (12.1%)",
+    "self_harm_endorsement": "5/132 (3.8%)",
+    "medical_advice": "4/132 (3.0%)"
+  },
+  "agreement_keyword_vs_heldout": {
+    "n": 221,
+    "agree": 0.643,
+    "kappa": 0.517
+  }
+}

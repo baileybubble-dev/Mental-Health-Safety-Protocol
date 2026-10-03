@@ -1,0 +1,174 @@
+{
+  "n_items": 231,
+  "parsed_counts": {
+    "med2": 80,
+    "med": 462,
+    "high": 79
+  },
+  "q1_vs_original": {
+    "overall": {
+      "n": 231,
+      "observed_agreement": 0.766,
+      "kappa": 0.535,
+      "kappa_95ci": [
+        0.423,
+        0.638
+      ],
+      "orig_breach_confirmed": "93/111",
+      "orig_FP_vs_heldout": 18,
+      "orig_safe_confirmed": "84/120",
+      "orig_FN_vs_heldout": 36
+    },
+    "static": {
+      "n": 114,
+      "observed_agreement": 0.728,
+      "kappa": 0.456,
+      "kappa_95ci": [
+        0.287,
+        0.613
+      ],
+      "orig_breach_confirmed": "40/54",
+      "orig_FP_vs_heldout": 14,
+      "orig_safe_confirmed": "43/60",
+      "orig_FN_vs_heldout": 17
+    },
+    "adaptive": {
+      "n": 117,
+      "observed_agreement": 0.803,
+      "kappa": 0.609,
+      "kappa_95ci": [
+        0.463,
+        0.739
+      ],
+      "orig_breach_confirmed": "53/57",
+      "orig_FP_vs_heldout": 4,
+      "orig_safe_confirmed": "41/60",
+      "orig_FN_vs_heldout": 19
+    },
+    "heldout_breach_rate_in_flagged": "93/111",
+    "heldout_breach_rate_in_pre_breach": "36/111",
+    "heldout_breach_rate_in_nonbreach_final": "0/9",
+    "borderline_cases(heldout_flag)": {
+      "n": 92,
+      "observed_agreement": 0.696,
+      "kappa": 0.367,
+      "kappa_95ci": [
+        0.168,
+        0.552
+      ],
+      "orig_breach_confirmed": "23/36",
+      "orig_FP_vs_heldout": 13,
+      "orig_safe_confirmed": "41/56",
+      "orig_FN_vs_heldout": 15
+    }
+  },
+  "q2_vs_original": {
+    "overall": {
+      "n": 231,
+      "observed_agreement": 0.706,
+      "kappa": 0.42,
+      "kappa_95ci": [
+        0.312,
+        0.523
+      ],
+      "orig_breach_confirmed": "101/111",
+      "orig_FP_vs_heldout": 10,
+      "orig_safe_confirmed": "62/120",
+      "orig_FN_vs_heldout": 58
+    },
+    "static": {
+      "n": 114,
+      "observed_agreement": 0.702,
+      "kappa": 0.416,
+      "kappa_95ci": [
+        0.268,
+        0.554
+      ],
+      "orig_breach_confirmed": "50/54",
+      "orig_FP_vs_heldout": 4,
+      "orig_safe_confirmed": "30/60",
+      "orig_FN_vs_heldout": 30
+    },
+    "adaptive": {
+      "n": 117,
+      "observed_agreement": 0.709,
+      "kappa": 0.424,
+      "kappa_95ci": [
+        0.262,
+        0.57
+      ],
+      "orig_breach_confirmed": "51/57",
+      "orig_FP_vs_heldout": 6,
+      "orig_safe_confirmed": "32/60",
+      "orig_FN_vs_heldout": 28
+    },
+    "heldout_breach_rate_in_flagged": "101/111",
+    "heldout_breach_rate_in_pre_breach": "56/111",
+    "heldout_breach_rate_in_nonbreach_final": "2/9",
+    "borderline_cases(heldout_flag)": {
+      "n": 83,
+      "observed_agreement": 0.542,
+      "kappa": 0.142,
+      "kappa_95ci": [
+        -0.037,
+        0.314
+      ],
+      "orig_breach_confirmed": "25/33",
+      "orig_FP_vs_heldout": 8,
+      "orig_safe_confirmed": "20/50",
+      "orig_FN_vs_heldout": 30
+    }
+  },
+  "q2_vs_q1": {
+    "n": 231,
+    "agreement": 0.801,
+    "kappa": 0.583,
+    "q1_yes_q2_no": 8,
+    "q1_no_q2_yes": 38
+  },
+  "category_keyword_vs_heldout": {
+    "n": 101,
+    "agreement": 0.535,
+    "kappa": 0.382,
+    "keyword_dist": {
+      "absolute_guarantee": 51,
+      "relational_dependence": 20,
+      "harmful_belief_validation": 1,
+      "professional_role": 24,
+      "medical_advice": 4,
+      "self_harm_endorsement": 1
+    },
+    "heldout_dist": {
+      "absolute_guarantee": 21,
+      "relational_dependence": 49,
+      "professional_role": 18,
+      "medical_advice": 8,
+      "harmful_belief_validation": 5
+    },
+    "keyword_absolute_guarantee_but_heldout_other": 32
+  },
+  "effort_sweep_medium_vs_high": {
+    "q1": {
+      "n": 39,
+      "agreement": 0.949,
+      "kappa": 0.894
+    },
+    "q2": {
+      "n": 40,
+      "agreement": 0.975,
+      "kappa": 0.946
+    }
+  },
+  "test_retest_medium": {
+    "q1": {
+      "n": 40,
+      "agreement": 0.95,
+      "kappa": 0.896
+    },
+    "q2": {
+      "n": 40,
+      "agreement": 0.975,
+      "kappa": 0.947
+    }
+  }
+}
